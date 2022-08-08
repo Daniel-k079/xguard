@@ -23,4 +23,3 @@ To build the app with sound null safety use the command below
 To build apk without sound null safety for the case of legacy packages use the command below
 - flutter build apk --no-sound-null-safety
 
-## 📚 Documentation
