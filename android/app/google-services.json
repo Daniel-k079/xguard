@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "503308158259",
+    "project_id": "xguard-app22",
+    "storage_bucket": "xguard-app22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:503308158259:android:3852a9035aba0171772a46",
+        "android_client_info": {
+          "package_name": "com.example.xguard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "503308158259-oipqn7mmih852dqjg4nhj5igrgtfsvpr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9vHF9DvbmaxsUWqd-4iDi7FjNCecS-Kk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "503308158259-oipqn7mmih852dqjg4nhj5igrgtfsvpr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

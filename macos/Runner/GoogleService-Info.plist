@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>503308158259-b2koqai9j3me4e9em4nsa9l8du0a96fd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.503308158259-b2koqai9j3me4e9em4nsa9l8du0a96fd</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB--RiLKPOlzx9aa4hWa5REIdoi482sOrs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>503308158259</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.xguard</string>
+	<key>PROJECT_ID</key>
+	<string>xguard-app22</string>
+	<key>STORAGE_BUCKET</key>
+	<string>xguard-app22.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:503308158259:ios:351f4937fc172fb6772a46</string>
+</dict>
+</plist>

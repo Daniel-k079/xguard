@@ -1,9 +1,21 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:xguard/pager.dart';
+import 'package:xguard/screens/login.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const OKToast(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,13 +32,23 @@ class MyApp extends StatelessWidget {
           currentFocus.focusedChild!.unfocus();
         }
       },
-      child: GetMaterialApp(
-        title: 'XGuard',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const Pager(),
-      ),
+      child: ScreenUtilInit(
+          designSize: const Size(520, 890),
+          builder: (context, w) => GetMaterialApp(
+                title: 'XGuard',
+                theme: ThemeData(
+                  primarySwatch: Colors.blue,
+                ),
+                home: StreamBuilder<User?>(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (context, snapshot) {
+                      if (snapshot.data != null) {
+                        return const Pager();
+                      } else {
+                        return const LoginPage();
+                      }
+                    }),
+              )),
     );
   }
 }

@@ -56,8 +56,9 @@ class _PagerState extends State<Pager> {
                                 Text(
                                   item['label'],
                                   style: const TextStyle(
-                                    fontSize: 10.0,
-                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12.0,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
                                     color: Colors.white,
                                   ),
                                 ),

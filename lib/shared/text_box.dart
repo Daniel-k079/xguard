@@ -16,13 +16,16 @@ class _TextBoxState extends State<TextBox> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric( vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             widget.title,
-            style: const TextStyle(fontWeight: FontWeight.w700),
+            style: const TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Poppins'),
           ),
           const SizedBox(
             height: 10.0,
@@ -39,7 +42,7 @@ class _TextBoxState extends State<TextBox> {
                 children: [
                   Text(
                     widget.value,
-                    style: const TextStyle(fontSize: 14.0),
+                    style: const TextStyle(fontSize: 14.0,fontFamily: 'Poppins'),
                   ),
                 ],
               ),

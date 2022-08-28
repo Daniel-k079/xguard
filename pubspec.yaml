@@ -22,6 +22,11 @@ dependencies:
   bouncing_widget: ^2.0.0
   cupertino_icons: ^1.0.2
   card_swiper: ^2.0.3
+  cloud_firestore: ^3.1.15
+  lottie: ^1.1.0
+  firebase_core: ^1.15.0
+  firebase_auth: ^3.3.16
+  flutter_screenutil: ^5.0.0+2
   get: ^4.6.1
   get_storage:
   oktoast: ^3.1.5
@@ -74,11 +79,14 @@ flutter:
     - family: Shrikhand
       fonts:
         - asset: assets/fonts/Shrikhand-Regular.ttf
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+    - family: Comfortaa
+      fonts:
+        - asset: assets/fonts/Comfortaa-VariableFont_wght.ttf
+
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-Black.ttf
+        - asset: assets/fonts/Poppins/Poppins-Bold.ttf
+        - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins/Poppins-Light.ttf
