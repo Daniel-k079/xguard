@@ -22,7 +22,11 @@ class _PagerState extends State<Pager> {
           scrollDirection: Axis.vertical,
           physics: const NeverScrollableScrollPhysics(),
           controller: navController.pageController,
-          children: const <Widget>[HomePage(), Request(), Profile()],
+          children: const <Widget>[
+            HomePage(),
+            Request(),
+            Profile(),
+          ],
         ),
         Align(
           alignment: Alignment.bottomCenter,

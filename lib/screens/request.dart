@@ -97,14 +97,14 @@ class _RequestState extends State<Request> {
               SizedBox(
                 height: 240,
                 child: CupertinoDatePicker(
-                  // initialDateTime: DateTime.now(),
-                  minimumDate: DateTime.now(),
-                  use24hFormat: true,
-                  onDateTimeChanged: (value) {
-                  setState(() {
-                    requestController.visitDate = value.toString();
-                  });
-                }),
+                    minimumDate: DateTime.now(),
+                    maximumDate: DateTime.now().add(const Duration(days: 7)),
+                    use24hFormat: true,
+                    onDateTimeChanged: (value) {
+                      setState(() {
+                        requestController.visitDate = value.toString();
+                      });
+                    }),
               ),
               const SizedBox(
                 height: 100.0,
@@ -122,9 +122,10 @@ class _RequestState extends State<Request> {
                     requestController.personToMeet.isNotEmpty &&
                     requestController.visitDate.isNotEmpty) {
                   requestController.makeRequest().then((value) {
-
-                    CustomOverlay.showToast('Request added successfully, check your main page',
-                        Colors.green, Colors.white);
+                    CustomOverlay.showToast(
+                        'Request added successfully, check your main page',
+                        Colors.green,
+                        Colors.white);
                     requestController.visitReason = '';
                     requestController.personToMeet = '';
                     requestController.visitDate = '';
