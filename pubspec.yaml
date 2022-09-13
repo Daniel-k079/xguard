@@ -36,6 +36,9 @@ dependencies:
   qr_flutter: ^4.0.0
   intl: ^0.17.0
   slide_countdown: ^0.2.3
+  circular_countdown: ^2.1.0
+  gap: ^2.0.0
+  timer_controller: ^0.1.0
 
 dev_dependencies:
   flutter_test:

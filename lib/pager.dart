@@ -1,6 +1,8 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:xguard/screens/home.dart';
+import 'controllers/my_requests.dart';
 import 'controllers/navigation_controller.dart';
 import 'screens/screens.dart';
 
@@ -13,6 +15,7 @@ class Pager extends StatefulWidget {
 
 class _PagerState extends State<Pager> {
   final navController = Get.put(NavigationController());
+  final myRequestController = Get.put(MyRequestController());
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,7 @@ class _PagerState extends State<Pager> {
           physics: const NeverScrollableScrollPhysics(),
           controller: navController.pageController,
           children: const <Widget>[
+            // ControlledCountdownPage(),
             HomePage(),
             Request(),
             Profile(),

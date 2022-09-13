@@ -29,7 +29,7 @@ class _ProfileState extends State<Profile> {
       children: <Widget>[
         Container(
           width: double.infinity,
-          height: size.height * 0.2,
+          height: size.height * 0.23,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [

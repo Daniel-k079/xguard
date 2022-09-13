@@ -23,7 +23,7 @@ class _RequestState extends State<Request> {
       children: [
         Container(
           width: double.infinity,
-          height: size.height * 0.2,
+          height: size.height * 0.23,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -69,7 +69,7 @@ class _RequestState extends State<Request> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 180.0),
+          padding: const EdgeInsets.only(top: 200.0),
           child: ListView(
             padding: EdgeInsets.zero,
             shrinkWrap: true,

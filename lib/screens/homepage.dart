@@ -1,13 +1,10 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 import 'package:xguard/controllers/controller.dart';
+import 'package:xguard/models/data_models.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,22 +14,70 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final myRequestController = Get.put(MyRequestController());
+  final MyRequestController myRequestController = Get.find();
+  late var object;
 
-  var userUid = FirebaseAuth.instance.currentUser!.uid;
-  Stream<QuerySnapshot>? gatePassRequestStream;
-  Duration? accessDuration;
 
   @override
-  void dispose() {
-    super.dispose();
+  void initState() {
+    getData();
+
+    super.initState();
   }
+
+  getData() async {
+    object = null;
+var tempList  = await myRequestController.myRequests.stream.first;
+    if (tempList.isNotEmpty) {
+
+      object = tempList.firstWhereOrNull((element) =>
+          DateTime.parse(element.visitDate!)
+                  .difference(DateTime.now())
+                  .inMinutes <=
+              0 &&
+          DateTime.parse(element.visitDate!)
+                  .difference(DateTime.now())
+                  .inMinutes >=
+              -10);
+
+      do {
+
+        print(object);
+        await Future.delayed(const Duration(seconds: 4));
+
+        if (object == null) {
+          myRequestController.slot(false);
+          setState(() {});
+        } else {
+          myRequestController.slot(true);
+          setState(() {});
+        }
+        object = tempList.firstWhereOrNull((element) =>
+            DateTime.parse(element.visitDate!)
+                    .difference(DateTime.now())
+                    .inMinutes <=
+                0 &&
+            DateTime.parse(element.visitDate!)
+                    .difference(DateTime.now())
+                    .inMinutes >=
+                -10);
+
+      } while (object == null || object != null);
+    } else {
+      object = null;
+    }
+  }
+
+  // @override
+  // void dispose() {
+  //   tempList = [];
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Obx(() {
-
       return Stack(
         children: <Widget>[
           Padding(
@@ -69,66 +114,69 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: DateTime.parse(myRequestController.myRequests[index].visitDate!)
-                                    .isAfter(DateTime.now())
-                                ? const Color.fromARGB(255, 101, 156, 210)
-                                : const Color.fromARGB(255, 164, 192, 216),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      myRequestController.myRequests[index]
-                                          .visitReason!,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Poppins'),
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      DateFormat('MMM dd, yyyy').format(
-                                          DateTime.parse(myRequestController
-                                                  .myRequests[index]
-                                            .visitDate!)),
-                                      style: const TextStyle(
-                                          fontSize: 12.0,
-                                          fontFamily: 'Poppins'),
-                                    ),
-                                    const SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    Text(
-                                      !DateTime.parse(myRequestController
-                                                      .myRequests[index]
-                                                  .visitDate!)
-                                              .isAfter(DateTime.now())
-                                          ? 'Elapsed'
-                                          : 'In schedule',
-                                      style: const TextStyle(
-                                          fontSize: 12.0,
-                                          fontFamily: 'Poppins'),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10.0,
-                                ),
-                                Text(
-                                  'Visited COCIS for ${myRequestController.myRequests[index].visitReason} with ${myRequestController.myRequests[index].personToMeet} at ${DateFormat('hh:mm').format(DateTime.parse(myRequestController.myRequests[index].visitDate!))}',
-                                  style: const TextStyle(fontFamily: 'Poppins'),
-                                )
-                              ],
+                        child: Obx(() {
+                          return Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: DateTime.parse(myRequestController
+                                          .myRequests[index].visitDate!)
+                                      .isAfter(DateTime.now())
+                                  ? const Color.fromARGB(255, 101, 156, 210)
+                                  : const Color.fromARGB(255, 164, 192, 216),
                             ),
-                          ),
-                        ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        myRequestController
+                                            .myRequests[index].visitReason!,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Poppins'),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        DateFormat('MMM dd, yyyy').format(
+                                            DateTime.parse(myRequestController
+                                                .myRequests[index].visitDate!)),
+                                        style: const TextStyle(
+                                            fontSize: 12.0,
+                                            fontFamily: 'Poppins'),
+                                      ),
+                                      const SizedBox(
+                                        width: 10.0,
+                                      ),
+                                      Text(
+                                        !DateTime.parse(myRequestController
+                                                    .myRequests[index]
+                                                    .visitDate!)
+                                                .isAfter(DateTime.now())
+                                            ? 'Elapsed'
+                                            : 'In schedule',
+                                        style: const TextStyle(
+                                            fontSize: 12.0,
+                                            fontFamily: 'Poppins'),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  Text(
+                                    'Visited COCIS for ${myRequestController.myRequests[index].visitReason} with ${myRequestController.myRequests[index].personToMeet} at ${DateFormat('hh:mm').format(DateTime.parse(myRequestController.myRequests[index].visitDate!))}',
+                                    style:
+                                        const TextStyle(fontFamily: 'Poppins'),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
                       );
                     }),
           ),
@@ -177,7 +225,7 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      myRequestController.myRequests.isEmpty
+                      object == null
                           ? const Text(
                               '-- : -- ',
                               style: TextStyle(
@@ -186,18 +234,8 @@ class _HomePageState extends State<HomePage> {
                                   fontWeight: FontWeight.w900,
                                   fontSize: 30.0),
                             )
-                          : SizedBox(
-                              width: 190,
-                              child: SlideCountdown(
-                                decoration: const BoxDecoration(),
-                                duration: myRequestController.accessDuration!,
-                                textStyle: const TextStyle(
-                                    fontFamily: 'Shrikhand',
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 40.0),
-                              ),
-                            ),
+                          : CountdownTimer(
+                              myRequestController: myRequestController),
                       const Text(
                         'mins',
                         style: TextStyle(
@@ -225,19 +263,23 @@ class _HomePageState extends State<HomePage> {
                             height: 10.0,
                           ),
                           Row(
-                            children: const [
-                              Icon(CupertinoIcons.clock,
+                            children: [
+                              const Icon(CupertinoIcons.clock,
                                   color: Color.fromARGB(218, 210, 199, 244)),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10.0,
                               ),
-                              Text(
-                                '10:00AM',
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontFamily: 'Poppins',
-                                    color: Color.fromARGB(218, 210, 199, 244)),
-                              ),
+                              object != null
+                                  ? Text(
+                                      DateFormat('hh:mm').format(
+                                          DateTime.parse(object.visitDate)),
+                                      style: const TextStyle(
+                                          fontSize: 12.0,
+                                          fontFamily: 'Poppins',
+                                          color: Color.fromARGB(
+                                              218, 210, 199, 244)),
+                                    )
+                                  : Container(),
                             ],
                           )
                         ],
@@ -257,19 +299,24 @@ class _HomePageState extends State<HomePage> {
                             height: 10.0,
                           ),
                           Row(
-                            children: const [
-                              Icon(CupertinoIcons.clock,
+                            children: [
+                              const Icon(CupertinoIcons.clock,
                                   color: Color.fromARGB(218, 210, 199, 244)),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10.0,
                               ),
-                              Text(
-                                '10:10AM',
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontFamily: 'Poppins',
-                                    color: Color.fromARGB(218, 210, 199, 244)),
-                              ),
+                              object != null
+                                  ? Text(
+                                      DateFormat('hh:mm').format(
+                                          DateTime.parse(object.visitDate).add(
+                                              const Duration(minutes: 10))),
+                                      style: const TextStyle(
+                                          fontSize: 12.0,
+                                          fontFamily: 'Poppins',
+                                          color: Color.fromARGB(
+                                              218, 210, 199, 244)),
+                                    )
+                                  : Container(),
                             ],
                           )
                         ],
@@ -283,5 +330,31 @@ class _HomePageState extends State<HomePage> {
         ],
       );
     });
+  }
+}
+
+class CountdownTimer extends StatelessWidget {
+  const CountdownTimer({
+    Key? key,
+    required this.myRequestController,
+  }) : super(key: key);
+
+  final MyRequestController myRequestController;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 190,
+      child: SlideCountdown(
+        
+        decoration: const BoxDecoration(),
+        duration: myRequestController.accessDuration!,
+        textStyle: const TextStyle(
+            fontFamily: 'Shrikhand',
+            color: Colors.white,
+            fontWeight: FontWeight.w900,
+            fontSize: 40.0),
+      ),
+    );
   }
 }
