@@ -5,7 +5,6 @@ class TextBox extends StatefulWidget {
       : super(key: key);
 
   final String title;
-
   final String value;
 
   @override

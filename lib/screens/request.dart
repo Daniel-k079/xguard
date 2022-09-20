@@ -16,6 +16,7 @@ class Request extends StatefulWidget {
 
 class _RequestState extends State<Request> {
   final requestController = Get.put(RequestController());
+  final NavigationController navController = Get.find();
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -45,7 +46,7 @@ class _RequestState extends State<Request> {
                 ),
                 Row(children: const [
                   Text(
-                    'Create Gate Pass Access',
+                    createGatePass,
                     style: TextStyle(
                         fontSize: 20.0,
                         fontFamily: 'Poppins',
@@ -57,7 +58,7 @@ class _RequestState extends State<Request> {
                   height: 10.0,
                 ),
                 const Text(
-                  'Here you can create your gate access to help you save time on the next time you are accessing the premises',
+                  createGatePassDescription,
                   style: TextStyle(
                       fontSize: 14.0,
                       fontFamily: 'Poppins',
@@ -75,9 +76,19 @@ class _RequestState extends State<Request> {
             shrinkWrap: true,
             children: <Widget>[
               ChoicePicker(
-                  optionList: visitReasons,
-                  title: 'Reason of visit',
-                  hint: 'Specify reason for visiting here',
+                  optionList: visitReasons
+                      .map((element) => DropdownMenuItem<String>(
+                            value: element,
+                            child: Text(
+                              element,
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                  title: visitReasonTitle,
+                  hint: visitReasonDescription,
                   selectedOption: requestController.visitReason,
                   onChanged: (value) {
                     setState(() {
@@ -85,9 +96,19 @@ class _RequestState extends State<Request> {
                     });
                   }),
               ChoicePicker(
-                  optionList: lecturers,
-                  title: 'Who are you meeting',
-                  hint: 'Why would you like to visit ?',
+                  optionList: lecturers
+                      .map((element) => DropdownMenuItem<String>(
+                            value: element['name'],
+                            child: Text(
+                              element['name'],
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                  title: personToMeetTitle,
+                  hint: personToMeetDescription,
                   selectedOption: requestController.personToMeet,
                   onChanged: (value) {
                     setState(() {
@@ -129,6 +150,7 @@ class _RequestState extends State<Request> {
                     requestController.visitReason = '';
                     requestController.personToMeet = '';
                     requestController.visitDate = '';
+                    navController.pageSwitcher(0);
                   });
                 } else {
                   CustomOverlay.showToast('Fill all fields, to continue saving',
@@ -140,7 +162,7 @@ class _RequestState extends State<Request> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    color: Color.fromARGB(255, 72, 95, 121)),
+                    color: const Color.fromARGB(255, 72, 95, 121)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const <Widget>[
@@ -149,7 +171,7 @@ class _RequestState extends State<Request> {
                       style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'Poppins',
-                          fontSize: 23.0,
+                          fontSize: 18.0,
                           fontWeight: FontWeight.w500),
                     ),
                   ],

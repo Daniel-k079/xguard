@@ -78,21 +78,29 @@ class LoginController extends GetxController {
       if (names.text.isNotEmpty && studentNumber.text.isNotEmpty) {
         isFirstPage(false);
         pageController.nextPage(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.linearToEaseOut);
       }
     } else {
       if (email.text.isNotEmpty && password.text.isNotEmpty) {
-
         try {
           final credential =
               await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: email.text,
             password: password.text,
           );
+          CustomOverlay.showLoaderOverlay(duration: 6);
           CustomOverlay.showToast(
               'Creating account and signing in', Colors.green, Colors.white);
-          FirebaseFirestore.instance.collection('users').doc(credential.user!.uid).set({
+          GetStorage()
+              .write('student_name', '${names.text}, ${studentNumber.text}');
+          print(GetStorage().read(
+            'student_name',
+          ));
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(credential.user!.uid)
+              .set({
             'name': names.text,
             'student_number': studentNumber.text,
             'email_address': email.text

@@ -27,6 +27,7 @@ dependencies:
   firebase_core: ^1.15.0
   firebase_auth: ^3.3.16
   flutter_screenutil: ^5.0.0+2
+  flutter_phoenix: ^1.0.0
   get: ^4.6.1
   get_storage:
   oktoast: ^3.1.5

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:xguard/pager.dart';
+import 'package:xguard/screens/homepage.dart';
 import 'package:xguard/screens/login.dart';
 import 'firebase_options.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        FirebaseAuth.instance.signOut();
         FocusScopeNode currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus &&
             currentFocus.focusedChild != null) {
@@ -43,7 +45,11 @@ class MyApp extends StatelessWidget {
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {
                       if (snapshot.data != null) {
-                        return const Pager();
+                        if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                          return const LecturerViewPage();
+                        } else {
+                          return const Pager();
+                        }
                       } else {
                         return const LoginPage();
                       }

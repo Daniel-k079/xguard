@@ -66,7 +66,7 @@ class ChoicePicker extends StatefulWidget {
   final String title;
   final String hint;
   String selectedOption;
-  List<String> optionList;
+  List<DropdownMenuItem<String>>? optionList;
   Function(String?)? onChanged;
 
   @override
@@ -100,27 +100,16 @@ class _ChoicePickerState extends State<ChoicePicker> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6.0),
                 child: DropdownButtonFormField<String>(
-                  items: widget.optionList
-                      .map((element) => DropdownMenuItem<String>(
-                            value: element,
-                            child: Text(
-                              element,
-                              style: const TextStyle(
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
-                          ))
-                      .toList(),
-                  hint: const Text(
-                    'Make choice here',
-                    style: TextStyle(fontFamily: 'Poppins'),
-                  ),
-                  decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                      border: InputBorder.none),
-                  onChanged: widget.onChanged
-                  
-                ),
+                  // value:widget.selectedOption ,
+                    items: widget.optionList,
+                    hint: const Text(
+                      'Make choice here',
+                      style: TextStyle(fontFamily: 'Poppins'),
+                    ),
+                    decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                        border: InputBorder.none),
+                    onChanged: widget.onChanged),
               ))
         ],
       ),

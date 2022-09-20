@@ -3,6 +3,7 @@ class MyRequestModel {
     this.personToMeet,
     this.visitDate,
     this.visitReason,
+    this.studentName
   });
 
   factory MyRequestModel.fromJson(Map<String, dynamic> json) {
@@ -13,13 +14,14 @@ class MyRequestModel {
     );
   }
 
-  final String? personToMeet, visitDate, visitReason;
+  final String? personToMeet, visitDate, visitReason,studentName;
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       'person_to_meet': personToMeet,
       'visit_date': visitDate,
       'visit_reason': visitReason,
+      'student_name': studentName,
     };
 
     return map..removeWhere((key, value) => value == '' || value == null);

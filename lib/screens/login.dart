@@ -1,9 +1,16 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:xguard/controllers/login_controller.dart';
-import 'package:xguard/models/auth_model.dart';
+import 'package:xguard/pager.dart';
+import 'package:xguard/shared/text_field_box.dart';
+import 'package:xguard/constants/strings.dart';
+import 'package:xguard/controllers/controller.dart';
+import 'package:xguard/shared/shared.dart';
+import 'package:xguard/utils/customOverlay.dart';
 
 enum LoginStates { blank, register, login }
 
@@ -16,7 +23,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final loginController = Get.put(LoginController());
-
+  final requestController = Get.put(RequestController());
+  final passWordController = TextEditingController();
   int currentState = 0;
 
   @override
@@ -35,8 +43,8 @@ class _LoginPageState extends State<LoginPage> {
         child: currentState == LoginStates.blank.index
             ? Column(
                 children: [
-                  Spacer(),
-                  Text(
+                  const Spacer(),
+                  const Text(
                     'GuardX',
                     style: TextStyle(
                         fontWeight: FontWeight.w800,
@@ -44,17 +52,17 @@ class _LoginPageState extends State<LoginPage> {
                         color: Colors.white,
                         fontFamily: 'Comfortaa'),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20.0,
                   ),
-                  Text(
+                  const Text(
                     'Come on board.',
                     style: TextStyle(
                         fontSize: 30.0,
                         fontWeight: FontWeight.w600,
                         color: Colors.white),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20.0,
                   ),
                   const Text(
@@ -66,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.w200,
                         color: Colors.white),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: Stack(
@@ -126,7 +134,121 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(
-                    height: 60.0,
+                    height: 20.0,
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 35.0, left: 5.0, right: 5.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15.0),
+                                      child: Text(
+                                        'Welcome,\nlet us recognize you',
+                                        style: TextStyle(
+                                          fontSize: 24.0,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    ChoicePicker(
+                                        optionList: lecturers
+                                            .sublist(0, 5)
+                                            .map((element) =>
+                                                DropdownMenuItem<String>(
+                                                  value: element['password'],
+                                                  child: Text(
+                                                    element['name'],
+                                                    style: const TextStyle(
+                                                      fontFamily: 'Poppins',
+                                                    ),
+                                                  ),
+                                                ))
+                                            .toList(),
+                                        title: 'Choose name below ',
+                                        hint: personToMeetDescription,
+                                        selectedOption:
+                                            requestController.personToMeet,
+                                        onChanged: (value) {
+                                          Map<String, dynamic> data =
+                                              lecturers.firstWhere((element) =>
+                                                  element.containsValue(value));
+                                          GetStorage().write(
+                                              'lecturer_name', data['name']);
+                                          setState(() {
+                                            requestController
+                                                .tempPassword.value = value!;
+
+                                            print(data['name']);
+                                            requestController.personToMeet =
+                                                value;
+                                            requestController.tempLecturer.value =
+                                                data['name'];
+                                          });
+                                        }),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    TextFieldBox(
+                                        title: 'Input admin password',
+                                        hint: 'Write here',
+                                        textEditingController:
+                                            passWordController),
+                                    const SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 25.0),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: CupertinoButton(
+                                                color: Colors.blue,
+                                                child: const Text('login In'),
+                                                onPressed: () async {
+                                                  if (passWordController.text ==
+                                                      requestController
+                                                          .tempPassword.value) {
+                                                    Navigator.pop(context);
+                                                    CustomOverlay
+                                                        .showLoaderOverlay(
+                                                            duration: 6);
+                                                    await FirebaseAuth.instance
+                                                        .signInAnonymously();
+                                                  } else {
+                                                    CustomOverlay.showToast(
+                                                        'You entered a wrong password',
+                                                        Colors.red,
+                                                        Colors.white);
+                                                  }
+                                                }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            });
+                      },
+                      child: const Text(
+                        'Log in as a lecturer',
+                        style: TextStyle(
+                            color: Colors.white,
+                            decoration: TextDecoration.underline),
+                      )),
+                  const SizedBox(
+                    height: 40.0,
                   )
                 ],
               )
@@ -143,14 +265,15 @@ class _LoginPageState extends State<LoginPage> {
                                   currentState = LoginStates.blank.index;
                                 });
                               },
-                              icon: Icon(CupertinoIcons.arrow_turn_up_left,
+                              icon: const Icon(
+                                  CupertinoIcons.arrow_turn_up_left,
                                   color: Colors.white),
                             )),
-                        SizedBox(
+                        const SizedBox(
                           height: 40.0,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
                           child: Text(
                             'Let\'s get you started',
                             style: TextStyle(
@@ -160,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.white),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20.0,
                         ),
                         const Padding(
@@ -175,7 +298,7 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.white),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         SizedBox(
                           height: 180,
                           child: PageView(
@@ -213,7 +336,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20.0,
                                   ),
                                   Padding(
@@ -231,7 +354,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: TextFormField(
                                         controller:
                                             loginController.studentNumber,
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                           border: InputBorder.none,
                                           hintText: 'Student number',
                                           helperText: '',
@@ -264,7 +387,7 @@ class _LoginPageState extends State<LoginPage> {
                                               BorderRadius.circular(18.0)),
                                       child: TextFormField(
                                         controller: loginController.email,
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                           border: InputBorder.none,
                                           hintText: 'Email address',
                                           helperText: '',
@@ -279,7 +402,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20.0,
                                   ),
                                   Padding(
@@ -297,7 +420,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: TextFormField(
                                         controller: loginController.password,
                                         obscureText: true,
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                           border: InputBorder.none,
                                           hintText: 'Password',
                                           helperText: '',
@@ -317,7 +440,7 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           child: BouncingWidget(
@@ -337,7 +460,7 @@ class _LoginPageState extends State<LoginPage> {
                                     loginController.isFirstPage.value
                                         ? 'Continue'
                                         : 'Create Account',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontFamily: 'Poppins',
                                         fontSize: 16.0,
                                         color: Colors.white,
@@ -348,7 +471,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                       ])
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,14 +485,15 @@ class _LoginPageState extends State<LoginPage> {
                                   currentState = LoginStates.blank.index;
                                 });
                               },
-                              icon: Icon(CupertinoIcons.arrow_turn_up_left,
+                              icon: const Icon(
+                                  CupertinoIcons.arrow_turn_up_left,
                                   color: Colors.white),
                             )),
-                        SizedBox(
+                        const SizedBox(
                           height: 40.0,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
                           child: Text(
                             'Let\'s sign you in',
                             style: TextStyle(
@@ -379,12 +503,12 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.white),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20.0,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: const Text(
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text(
                             'Welcome back,\nyou have been missed.',
                             textAlign: TextAlign.left,
                             style: TextStyle(
@@ -394,7 +518,7 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.white),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           child: Container(
@@ -407,7 +531,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(18.0)),
                             child: TextFormField(
                               controller: loginController.email,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Email address',
                                 helperText: '',
@@ -422,7 +546,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20.0,
                         ),
                         Padding(
@@ -438,7 +562,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextFormField(
                               controller: loginController.password,
                               obscureText: true,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Password',
                                 helperText: '',
@@ -453,13 +577,12 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           child: BouncingWidget(
                             onPressed: () {
-
-                              loginController.signIn( context);
+                              loginController.signIn(context);
                             },
                             child: Container(
                               width: double.infinity,
@@ -481,7 +604,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                       ]),
       ),
     );
