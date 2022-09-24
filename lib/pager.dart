@@ -7,6 +7,10 @@ import 'controllers/navigation_controller.dart';
 import 'screens/screens.dart';
 
 class Pager extends StatefulWidget {
+  /// #####  Pager class
+  /// Here we are creating our [Pager] class
+  /// This is like our main canvas on which we paint and draw pages and then put it up on the wall
+  ///  [MyApp] for this case.
   const Pager({Key? key}) : super(key: key);
 
   @override
@@ -14,8 +18,9 @@ class Pager extends StatefulWidget {
 }
 
 class _PagerState extends State<Pager> {
+  /// Here we are injecting our dependencies
   final navController = Get.put(NavigationController());
-  final myRequestController = Get.put(MyRequestController());
+  final myRequestController = Get.put(instantiate());
 
   @override
   Widget build(BuildContext context) {
@@ -31,59 +36,72 @@ class _PagerState extends State<Pager> {
             Profile(),
           ],
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: DelayedFade(
-            delay: 650,
-            child: Container(
-                height: 90.0,
-                decoration: const BoxDecoration(
-                    color: Colors.blueGrey,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(40))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: navController.navBarItems
-                      .map((item) => BouncingWidget(
-                            onPressed: () {
-                              navController.pageSwitcher(
-                                navController.navBarItems.indexOf(item),
-                              );
-                            },
-                            child: Container(
-                              color: Colors.transparent,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(
-                                    item['icon'],
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  Text(
-                                    item['label'],
-                                    style: const TextStyle(
-                                      fontSize: 12.0,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10.0,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ))
-                      .toList(),
-                )),
-          ),
-        )
+        NavBar(navController: navController)
       ]),
+    );
+  }
+}
+
+class NavBar extends StatelessWidget {
+  const NavBar({
+    Key? key,
+    required this.navController,
+  }) : super(key: key);
+
+  final NavigationController navController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: DelayedFade(
+        delay: 650,
+        child: Container(
+            height: 90.0,
+            decoration: const BoxDecoration(
+                color: Colors.blueGrey,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(40))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: navController.navBarItems
+                  .map((item) => BouncingWidget(
+                        onPressed: () {
+                          navController.pageSwitcher(
+                            navController.navBarItems.indexOf(item),
+                          );
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                item['icon'],
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                item['label'],
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            )),
+      ),
     );
   }
 }

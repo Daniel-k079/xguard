@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final MyRequestController myRequestController = Get.find();
+  final instantiate myRequestController = Get.find();
   final ScrollController scrollController = ScrollController();
 
   double borderRadius = 45.0;
@@ -38,7 +38,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     scrollController.addListener(scrollListener);
-
     super.initState();
   }
 
@@ -195,9 +194,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
-
-
 class LecturerViewPage extends StatefulWidget {
   const LecturerViewPage({Key? key}) : super(key: key);
 
@@ -206,7 +202,7 @@ class LecturerViewPage extends StatefulWidget {
 }
 
 class _LecturerViewPageState extends State<LecturerViewPage> {
-  final  myRequestController = Get.put(MyRequestController());
+  final myRequestController = Get.put(instantiate());
   final ScrollController scrollController = ScrollController();
 
   double borderRadius = 45.0;
@@ -282,7 +278,8 @@ class _LecturerViewPageState extends State<LecturerViewPage> {
                       : ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.only(top: 20.0, bottom: 130),
+                          padding:
+                              const EdgeInsets.only(top: 20.0, bottom: 130),
                           itemCount: myRequestController.myRequestsLec.length,
                           itemBuilder: (context, index) {
                             return Padding(
@@ -320,7 +317,8 @@ class _LecturerViewPageState extends State<LecturerViewPage> {
                                                                   .myRequestsLec[
                                                                       index]
                                                                   .visitDate!)
-                                                          .isAfter(DateTime.now())
+                                                          .isAfter(
+                                                              DateTime.now())
                                                       ? 'Elapsed'
                                                       : 'In schedule',
                                                   style: const TextStyle(
@@ -336,9 +334,11 @@ class _LecturerViewPageState extends State<LecturerViewPage> {
                                                                   .myRequestsLec[
                                                                       index]
                                                                   .visitDate!)
-                                                          .isAfter(DateTime.now())
+                                                          .isAfter(
+                                                              DateTime.now())
                                                       ? CupertinoIcons.clock
-                                                      : CupertinoIcons.check_mark,
+                                                      : CupertinoIcons
+                                                          .check_mark,
                                                   size: 17.0,
                                                 ),
                                               ],
@@ -353,7 +353,8 @@ class _LecturerViewPageState extends State<LecturerViewPage> {
                                                       .myRequestsLec[index]
                                                       .visitReason!,
                                                   style: const TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontFamily: 'Poppins'),
                                                 ),
                                               ],

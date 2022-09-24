@@ -1,16 +1,8 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:xguard/controllers/login_controller.dart';
-import 'package:xguard/pager.dart';
-import 'package:xguard/shared/text_field_box.dart';
-import 'package:xguard/constants/strings.dart';
-import 'package:xguard/controllers/controller.dart';
-import 'package:xguard/shared/shared.dart';
-import 'package:xguard/utils/customOverlay.dart';
 
 enum LoginStates { blank, register, login }
 
@@ -23,8 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final loginController = Get.put(LoginController());
-  final requestController = Get.put(RequestController());
-  final passWordController = TextEditingController();
+
   int currentState = 0;
 
   @override
@@ -138,108 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextButton(
                       onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 35.0, left: 5.0, right: 5.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 15.0),
-                                      child: Text(
-                                        'Welcome,\nlet us recognize you',
-                                        style: TextStyle(
-                                          fontSize: 24.0,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20.0,
-                                    ),
-                                    ChoicePicker(
-                                        optionList: lecturers
-                                            .sublist(0, 5)
-                                            .map((element) =>
-                                                DropdownMenuItem<String>(
-                                                  value: element['password'],
-                                                  child: Text(
-                                                    element['name'],
-                                                    style: const TextStyle(
-                                                      fontFamily: 'Poppins',
-                                                    ),
-                                                  ),
-                                                ))
-                                            .toList(),
-                                        title: 'Choose name below ',
-                                        hint: personToMeetDescription,
-                                        selectedOption:
-                                            requestController.personToMeet,
-                                        onChanged: (value) {
-                                          Map<String, dynamic> data =
-                                              lecturers.firstWhere((element) =>
-                                                  element.containsValue(value));
-                                          GetStorage().write(
-                                              'lecturer_name', data['name']);
-                                          setState(() {
-                                            requestController
-                                                .tempPassword.value = value!;
-
-                                            print(data['name']);
-                                            requestController.personToMeet =
-                                                value;
-                                            requestController.tempLecturer.value =
-                                                data['name'];
-                                          });
-                                        }),
-                                    const SizedBox(
-                                      height: 10.0,
-                                    ),
-                                    TextFieldBox(
-                                        title: 'Input admin password',
-                                        hint: 'Write here',
-                                        textEditingController:
-                                            passWordController),
-                                    const SizedBox(
-                                      height: 20.0,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 25.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: CupertinoButton(
-                                                color: Colors.blue,
-                                                child: const Text('login In'),
-                                                onPressed: () async {
-                                                  if (passWordController.text ==
-                                                      requestController
-                                                          .tempPassword.value) {
-                                                    Navigator.pop(context);
-                                                    CustomOverlay
-                                                        .showLoaderOverlay(
-                                                            duration: 6);
-                                                    await FirebaseAuth.instance
-                                                        .signInAnonymously();
-                                                  } else {
-                                                    CustomOverlay.showToast(
-                                                        'You entered a wrong password',
-                                                        Colors.red,
-                                                        Colors.white);
-                                                  }
-                                                }),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
+                        loginController.showLecturerSheet(context);
                       },
                       child: const Text(
                         'Log in as a lecturer',
@@ -373,67 +263,16 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               Column(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 30.0),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 70.0,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 0.3, color: Colors.white),
-                                          color: Colors.white12,
-                                          borderRadius:
-                                              BorderRadius.circular(18.0)),
-                                      child: TextFormField(
-                                        controller: loginController.email,
-                                        decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: 'Email address',
-                                          helperText: '',
-                                          contentPadding: EdgeInsets.only(
-                                              left: 25.0, top: 40),
-                                          hintStyle: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontSize: 16.0,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                    ),
+                                  TextField(
+                                    textController: loginController.email,
+                                    hint: 'Email address',
                                   ),
                                   const SizedBox(
                                     height: 20.0,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 30.0),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 70.0,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 0.3, color: Colors.white),
-                                          color: Colors.white12,
-                                          borderRadius:
-                                              BorderRadius.circular(18.0)),
-                                      child: TextFormField(
-                                        controller: loginController.password,
-                                        obscureText: true,
-                                        decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: 'Password',
-                                          helperText: '',
-                                          contentPadding: EdgeInsets.only(
-                                              left: 25.0, top: 40),
-                                          hintStyle: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontSize: 16.0,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w400),
-                                        ),
-                                      ),
-                                    ),
+                                  TextField(
+                                    textController: loginController.password,
+                                    hint: 'Password',
                                   ),
                                 ],
                               )
@@ -606,6 +445,46 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const Spacer(),
                       ]),
+      ),
+    );
+  }
+}
+
+class TextField extends StatelessWidget {
+  const TextField({
+    Key? key,
+    required this.textController,
+    required this.hint,
+  }) : super(key: key);
+
+  final TextEditingController textController;
+  final String hint;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      child: Container(
+        width: double.infinity,
+        height: 70.0,
+        decoration: BoxDecoration(
+            border: Border.all(width: 0.3, color: Colors.white),
+            color: Colors.white12,
+            borderRadius: BorderRadius.circular(18.0)),
+        child: TextFormField(
+          controller: textController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: hint,
+            helperText: '',
+            contentPadding: const EdgeInsets.only(left: 25.0, top: 40),
+            hintStyle: const TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16.0,
+                color: Colors.white,
+                fontWeight: FontWeight.w500),
+          ),
+        ),
       ),
     );
   }

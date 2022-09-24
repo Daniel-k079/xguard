@@ -149,7 +149,7 @@ class _ProfileState extends State<Profile> {
                               )
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20.0,
                           ),
                           TextBox(

@@ -17,7 +17,7 @@ class Countdown extends StatefulWidget {
 }
 
 class CountdownState extends State<Countdown> {
-  final MyRequestController myRequestController = Get.find();
+  final instantiate myRequestController = Get.find();
 
   @override
   Widget build(BuildContext context) {

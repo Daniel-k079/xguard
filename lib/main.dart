@@ -12,6 +12,8 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  //setting portrait mode only to disable auto rotation on the app
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -22,18 +24,20 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  // This widget is the root of your application. You might like to think of it as the wall of our
+  // house on which we pin and hang our Pager which is our canvas
   @override
   Widget build(BuildContext context) {
+    //This to dismiss the keyboard when there is a focused textfield
     return GestureDetector(
       onTap: () {
-        FirebaseAuth.instance.signOut();
         FocusScopeNode currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus &&
             currentFocus.focusedChild != null) {
           currentFocus.focusedChild!.unfocus();
         }
       },
+      //setting screen ratio so it does not change with device DPI
       child: ScreenUtilInit(
           designSize: const Size(520, 890),
           builder: (context, w) => GetMaterialApp(
@@ -41,9 +45,11 @@ class MyApp extends StatelessWidget {
                 theme: ThemeData(
                   primarySwatch: Colors.blue,
                 ),
+                //Stream to listen for auth state changes
                 home: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {
+                      //if user is anonymous then it is a lecturer and otherwise a student and when a user is empty then we route to the Login page
                       if (snapshot.data != null) {
                         if (FirebaseAuth.instance.currentUser!.isAnonymous) {
                           return const LecturerViewPage();
