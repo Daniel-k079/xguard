@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:xguard/controllers/login_controller.dart';
 
+import '../utils/customOverlay.dart';
+
 enum LoginStates { blank, register, login }
 
 class LoginPage extends StatefulWidget {
@@ -134,6 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Text(
                         'Log in as a lecturer',
                         style: TextStyle(
+                            fontFamily: 'Poppins',
                             color: Colors.white,
                             decoration: TextDecoration.underline),
                       )),
