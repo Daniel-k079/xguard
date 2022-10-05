@@ -33,7 +33,9 @@ class _DelayedFadeState extends State<DelayedFade>
         .animate(curve);
 
     Timer(Duration(milliseconds: widget.delay), () {
-      _controller.forward();
+      if (mounted) {
+        _controller.forward();
+      }
     });
   }
 
