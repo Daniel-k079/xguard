@@ -5,6 +5,7 @@ import 'package:xguard/controllers/controller.dart';
 class TextFieldBox extends StatefulWidget {
   const TextFieldBox(
       {Key? key,
+      this.isPassword = false,
       required this.title,
       required this.hint,
       required this.textEditingController})
@@ -13,6 +14,7 @@ class TextFieldBox extends StatefulWidget {
   final String title;
   final String hint;
   final TextEditingController textEditingController;
+  final bool isPassword;
 
   @override
   State<TextFieldBox> createState() => _TextFieldBoxState();
@@ -28,7 +30,10 @@ class _TextFieldBoxState extends State<TextFieldBox> {
         children: [
           Text(
             widget.title,
-            style: const TextStyle(fontWeight: FontWeight.w700),
+            style: const TextStyle(
+                fontSize: 17.0,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Poppins'),
           ),
           const SizedBox(
             height: 10.0,
@@ -39,10 +44,12 @@ class _TextFieldBoxState extends State<TextFieldBox> {
                 borderRadius: BorderRadius.circular(13.0),
                 border: Border.all(width: 0.3)),
             child: TextFormField(
+              obscureText: widget.isPassword,
               controller: widget.textEditingController,
               decoration: InputDecoration(
                   hintText: widget.hint,
-                  hintStyle: const TextStyle(fontSize: 14.0),
+                  hintStyle:
+                      const TextStyle(fontSize: 14.0, fontFamily: 'Poppins'),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20.0)),
             ),
@@ -100,7 +107,7 @@ class _ChoicePickerState extends State<ChoicePicker> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6.0),
                 child: DropdownButtonFormField<String>(
-                  // value:widget.selectedOption ,
+                    // value:widget.selectedOption ,
                     items: widget.optionList,
                     hint: const Text(
                       'Make choice here',
