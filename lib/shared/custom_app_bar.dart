@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:timer_controller/timer_controller.dart';
 import 'package:xguard/animations/animations.dart';
 import 'package:xguard/controllers/controller.dart';
 import 'package:xguard/shared/shared.dart';
@@ -43,150 +44,147 @@ class CustomAppBar extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.only(
                 top: 60.0, left: 20.0, right: 20.0, bottom: 10.0),
-            child: Obx(() {
-              return Column(
-                children: <Widget>[
-                  Expanded(
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      const DelayedFade(
+                        delay: 200,
+                        child: Text(
+                          'GuardX',
+                          style: TextStyle(
+                              fontSize: 19.0,
+                              fontFamily: 'Comfortaa',
+                              color: Colors.white),
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                          onPressed: () {
+                            loginController.logout(context);
+                          },
+                          icon: const Icon(
+                            Icons.logout,
+                            color: Colors.white,
+                          ))
+                    ],
+                  ),
+                ),
+                const DelayedFade(
+                  delay: 300,
+                  child: Text(
+                    'Current Time Access',
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        fontFamily: 'Poppins',
+                        color: Colors.white),
+                  ),
+                ),
+                const Spacer(),
+                const Spacer(),
+                const Spacer(),
+                const Countdown(),
+                const Spacer(),
+                const Spacer(),
+                Expanded(
+                  flex: 2,
+                  child: DelayedAnimation(
+                    delay: 500,
                     child: Row(
                       children: <Widget>[
-                        const DelayedFade(
-                          delay: 200,
-                          child: Text(
-                            'GuardX',
-                            style: TextStyle(
-                                fontSize: 19.0,
-                                fontFamily: 'Comfortaa',
-                                color: Colors.white),
+                        FittedBox(
+                          fit: BoxFit.cover,
+                          child: Column(
+                            children: <Widget>[
+                              const Text(
+                                'CHECKED-IN',
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'Poppins',
+                                    color: Color.fromARGB(207, 255, 255, 255)),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(CupertinoIcons.clock,
+                                      color:
+                                          Color.fromARGB(218, 210, 199, 244)),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                myRequestController
+                                                  .data.isNotEmpty
+                                      ?
+                                      Text(
+                                          DateFormat('hh:mm').format(
+                                              DateTime.parse(myRequestController
+                                                  .data['visit_date'] ?? '')),
+                                          style: const TextStyle(
+                                              fontSize: 12.0,
+                                              fontFamily: 'Poppins',
+                                              color: Color.fromARGB(
+                                                  218, 210, 199, 244)),
+                                        )
+                                      : const SizedBox.shrink()
+                                ],
+                              )
+                            ],
                           ),
                         ),
                         const Spacer(),
-                        IconButton(
-                            onPressed: () {
-                              loginController.logout(context);
-                            },
-                            icon: const Icon(
-                              Icons.logout,
-                              color: Colors.white,
-                            ))
+                        FittedBox(
+                          fit: BoxFit.cover,
+                          child: Column(
+                            children: <Widget>[
+                              const Text(
+                                'CHECKED-OUT',
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'Poppins',
+                                    color: Color.fromARGB(207, 255, 255, 255)),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(CupertinoIcons.clock,
+                                      color:
+                                          Color.fromARGB(218, 210, 199, 244)),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  myRequestController
+                                                  .data.isNotEmpty ?
+                                       Text(
+                                          DateFormat('hh:mm').format(DateTime
+                                                  .parse(myRequestController
+                                                      .data['visit_date'])
+                                              .add(
+                                                  const Duration(minutes: 10))),
+                                          style: const TextStyle(
+                                              fontSize: 12.0,
+                                              fontFamily: 'Poppins',
+                                              color: Color.fromARGB(
+                                                  218, 210, 199, 244)),
+                                        )
+                                      : const SizedBox.shrink()
+                                ],
+                              )
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
-                  const DelayedFade(
-                    delay: 300,
-                    child: Text(
-                      'Current Time Access',
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          fontFamily: 'Poppins',
-                          color: Colors.white),
-                    ),
-                  ),
-                  const Spacer(),
-                  const Spacer(),
-                  const Spacer(),
-                  const Countdown(),
-                  const Spacer(),
-                  const Spacer(),
-                  Expanded(
-                    flex: 2,
-                    child: DelayedAnimation(
-                      delay: 500,
-                      child: Row(
-                        children: <Widget>[
-                          FittedBox(
-                            fit: BoxFit.cover,
-                            child: Column(
-                              children: <Widget>[
-                                const Text(
-                                  'CHECKED-IN',
-                                  style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w700,
-                                      fontFamily: 'Poppins',
-                                      color:
-                                          Color.fromARGB(207, 255, 255, 255)),
-                                ),
-                                const SizedBox(
-                                  height: 10.0,
-                                ),
-                                Row(
-                                  children: [
-                                    const Icon(CupertinoIcons.clock,
-                                        color:
-                                            Color.fromARGB(218, 210, 199, 244)),
-                                    const SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    myRequestController.slot.value
-                                        ? Text(
-                                            DateFormat('hh:mm').format(
-                                                DateTime.parse(
-                                                    myRequestController
-                                                        .data['visit_date'])),
-                                            style: const TextStyle(
-                                                fontSize: 12.0,
-                                                fontFamily: 'Poppins',
-                                                color: Color.fromARGB(
-                                                    218, 210, 199, 244)),
-                                          )
-                                        : Container(),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                          const Spacer(),
-                          FittedBox(
-                            fit: BoxFit.cover,
-                            child: Column(
-                              children: <Widget>[
-                                const Text(
-                                  'CHECKED-OUT',
-                                  style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w700,
-                                      fontFamily: 'Poppins',
-                                      color:
-                                          Color.fromARGB(207, 255, 255, 255)),
-                                ),
-                                const SizedBox(
-                                  height: 10.0,
-                                ),
-                                Row(
-                                  children: [
-                                    const Icon(CupertinoIcons.clock,
-                                        color:
-                                            Color.fromARGB(218, 210, 199, 244)),
-                                    const SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    myRequestController.slot.value
-                                        ? Text(
-                                            DateFormat('hh:mm').format(
-                                                DateTime.parse(
-                                                        myRequestController
-                                                            .data['visit_date'])
-                                                    .add(const Duration(
-                                                        minutes: 10))),
-                                            style: const TextStyle(
-                                                fontSize: 12.0,
-                                                fontFamily: 'Poppins',
-                                                color: Color.fromARGB(
-                                                    218, 210, 199, 244)),
-                                          )
-                                        : Container(),
-                                  ],
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              );
-            })),
+                )
+              ],
+            )),
       ),
     );
   }
@@ -196,11 +194,9 @@ class CustomAppBar2 extends StatelessWidget {
   const CustomAppBar2({
     Key? key,
     required this.borderRadius,
-
   }) : super(key: key);
 
   final double borderRadius;
-
 
   @override
   Widget build(BuildContext context) {
