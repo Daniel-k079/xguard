@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:xguard/constants/strings.dart';
 import 'package:xguard/controllers/controller.dart';
-import 'package:xguard/models/auth_model.dart';
 import 'package:xguard/pager.dart';
 import 'package:xguard/shared/shared.dart';
 import 'package:xguard/utils/customOverlay.dart';
@@ -29,18 +29,15 @@ class LoginController extends GetxController {
     studentNumber.clear();
   }
 
-  ///sign out method
-  Future<void> logOut() async {
-    await FirebaseAuth.instance.signOut();
-  }
-
   ///log in method
   Future signIn(BuildContext context) async {
     names.clear();
     studentNumber.clear();
     if (email.text.isNotEmpty && password.text.isNotEmpty) {
+      CustomOverlay.showToast('Trying to log in', Colors.orange, Colors.white);
+      await Future.delayed(const Duration(milliseconds: 500));
+      CustomOverlay.showLoaderOverlay(duration: 2);
       try {
-        CustomOverlay.showLoaderOverlay(duration: 5);
         final credential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
                 email: email.text, password: password.text);
@@ -52,6 +49,7 @@ class LoginController extends GetxController {
             context, MaterialPageRoute(builder: (context) => const Pager()));
         return credential;
       } on FirebaseAuthException catch (e) {
+        print(e.code);
         if (e.code == 'invalid-email') {
           CustomOverlay.showToast(
               'No account found, check your email and password',
@@ -59,10 +57,9 @@ class LoginController extends GetxController {
               Colors.white);
         }
 
-
         if (e.code == 'user-not-found') {
-
-
+          CustomOverlay.showToast('User not found, sign up for an account',
+              Colors.red, Colors.white);
         } else if (e.code == 'wrong-password') {
           print('Wrong password provided for that user.');
           CustomOverlay.showToast(
@@ -88,6 +85,9 @@ class LoginController extends GetxController {
     } else {
       if (email.text.isNotEmpty && password.text.isNotEmpty) {
         try {
+          CustomOverlay.showToast(
+              'Trying to log in', Colors.orange, Colors.white);
+          await Future.delayed(const Duration(milliseconds: 500));
           final credential =
               await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: email.text,
@@ -98,9 +98,7 @@ class LoginController extends GetxController {
               'Creating account and signing in', Colors.green, Colors.white);
           GetStorage()
               .write('student_name', '${names.text}, ${studentNumber.text}');
-          print(GetStorage().read(
-            'student_name',
-          ));
+
           FirebaseFirestore.instance
               .collection('users')
               .doc(credential.user!.uid)
@@ -129,6 +127,71 @@ class LoginController extends GetxController {
     }
   }
 
+  Future logout(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Text(
+                    'Do you want to log out?',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Poppins'),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  const Text(
+                    'Are you sure you want to terminate this session',
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Poppins'),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      ElevatedButton(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                            FirebaseAuth.instance.signOut();
+                            await Get.deleteAll(force: true);
+                            Phoenix.rebirth(context);
+                            Get.reset();
+                          },
+                          child: Text('Yes')),
+                      const SizedBox(width: 10.0),
+                      SizedBox(
+                        width: 100,
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.red),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('No')),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   void onInit() {
     pageController.addListener(() {
@@ -142,88 +205,120 @@ class LoginController extends GetxController {
   Future<void> showLecturerSheet(BuildContext context) {
     final requestController = Get.put(RequestController());
     return showModalBottomSheet(
+        backgroundColor: Colors.purple[100],
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(12.0))),
         context: context,
+        isScrollControlled: true,
         builder: (context) {
           return Padding(
-            padding: const EdgeInsets.only(top: 35.0, left: 5.0, right: 5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Text(
-                    'Welcome,\nlet us recognize you',
-                    style: TextStyle(
-                      fontSize: 24.0,
+            padding: EdgeInsets.only(
+              top: 45.0,
+              left: 5.0,
+              right: 5.0,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 30,
+            ),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * .55,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Text(
+                      'Welcome,\nlet us recognize you',
+                      style: TextStyle(fontSize: 28.0, fontFamily: 'Poppins'),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                ChoicePicker(
-                    optionList: lecturers
-                        .sublist(0, 5)
-                        .map((element) => DropdownMenuItem<String>(
-                              value: element['password'],
-                              child: Text(
-                                element['name'],
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                            ))
-                        .toList(),
-                    title: 'Choose name below ',
-                    hint: personToMeetDescription,
-                    selectedOption: requestController.personToMeet,
-                    onChanged: (value) {
-                      Map<String, dynamic> data = lecturers.firstWhere(
-                          (element) => element.containsValue(value));
-                      GetStorage().write('lecturer_name', data['name']);
-
-                      requestController.tempPassword.value = value!;
-
-                      
-                      requestController.personToMeet = value;
-                      requestController.tempLecturer.value = data['name'];
-                    }),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                TextFieldBox(
-                    title: 'Input admin password',
-                    hint: 'Write here',
-                    textEditingController: passWordController),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: CupertinoButton(
-                            color: Colors.blue,
-                            child: const Text('login In'),
-                            onPressed: () async {
-                              if (passWordController.text ==
-                                  requestController.tempPassword.value) {
-                                Navigator.pop(context);
-                                CustomOverlay.showLoaderOverlay(duration: 6);
-                                await FirebaseAuth.instance.signInAnonymously();
-                              } else {
-                                CustomOverlay.showToast(
-                                    'You entered a wrong password',
-                                    Colors.red,
-                                    Colors.white);
-                              }
-                            }),
-                      ),
-                    ],
+                  const SizedBox(
+                    height: 20.0,
                   ),
-                ),
-              ],
+                  ChoicePicker(
+                      optionList: lecturers
+                          .sublist(0, 5)
+                          .map((element) => DropdownMenuItem<String>(
+                                value: element['password'],
+                                child: Text(
+                                  element['name'],
+                                  style: const TextStyle(
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      title: 'Choose name below ',
+                      hint: personToMeetDescription,
+                      selectedOption: requestController.personToMeet,
+                      onChanged: (value) {
+                        Map<String, dynamic> data = lecturers.firstWhere(
+                            (element) => element.containsValue(value));
+                        GetStorage().write('lecturer_name', data['name']);
+
+                        requestController.tempPassword.value = value!;
+
+                        requestController.personToMeet = value;
+                        requestController.tempLecturer.value = data['name'];
+                      }),
+                  const SizedBox(
+                    height: 8.0,
+                  ),
+                  TextFieldBox(
+                      isPassword: true,
+                      title: 'Input admin password',
+                      hint: 'Write here',
+                      textEditingController: passWordController),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 60.0,
+                            child: CupertinoButton(
+                                color: Colors.purple[800],
+                                child: const Text(
+                                  'Login In',
+                                  style: TextStyle(fontFamily: 'Poppins'),
+                                ),
+                                onPressed: () async {
+                                  CustomOverlay.showToast('Trying to log in',
+                                      Colors.orange, Colors.white);
+                                  await Future.delayed(
+                                      const Duration(milliseconds: 500));
+                                  if (requestController
+                                      .tempPassword.value.isEmpty) {
+                                    CustomOverlay.showToast(
+                                        'Pick a user (lecturer)',
+                                        Colors.red,
+                                        Colors.white);
+                                  } else if (passWordController.text.isEmpty) {
+                                    CustomOverlay.showToast(
+                                        'Enter a password to continue',
+                                        Colors.red,
+                                        Colors.white);
+                                  } else if (passWordController.text ==
+                                      requestController.tempPassword.value) {
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.pop(context);
+                                    await FirebaseAuth.instance
+                                        .signInAnonymously();
+                                  } else {
+                                    CustomOverlay.showToast(
+                                        'You entered a wrong password ',
+                                        Colors.red,
+                                        Colors.white);
+                                  }
+                                }),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         });
