@@ -17,7 +17,7 @@ class Countdown extends StatefulWidget {
 }
 
 class CountdownState extends State<Countdown> {
-  final instantiate myRequestController = Get.find();
+  final MyRequest myRequestController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +26,7 @@ class CountdownState extends State<Countdown> {
       listenWhen: (previousValue, currentValue) =>
           previousValue.status != currentValue.status,
       listener: (context, timerValue) {
+        print(timerValue.remaining);
         ScaffoldMessenger.of(context).showSnackBar(
           _StatusSnackBar(
             'Status: ${describeEnum(timerValue.status)}',
@@ -50,24 +51,27 @@ class CountdownState extends State<Countdown> {
               default:
             }
 
-            return DelayedFade(
-              delay: 400,
-              child: CircularCountdown(
-                diameter: 140,
-                countdownTotal:
-                    myRequestController.controller.initialValue.remaining,
-                countdownRemaining: timerValue.remaining,
-                countdownCurrentColor: timerColor,
-                // countdownRemainingColor:
-                //     const Color.fromARGB(132, 111, 174, 213),
-                // countdownTotalColor: const Color.fromARGB(0, 230, 225, 225),
-                textStyle: const TextStyle(
-                  fontFamily: 'Shrikhand',
-                  color: Color.fromARGB(227, 228, 246, 255),
-                  fontSize: 60,
-                ),
-              ),
-            );
+            return timerValue.remaining == 0
+                ? const Text(
+                    'No activity',
+                    style: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
+                        fontSize: 25.0),
+                  )
+                : DelayedFade(
+                    delay: 400,
+                    child: CircularCountdown(
+                      diameter: 155,
+                      countdownTotal: timerValue.remaining,
+                      countdownCurrentColor: timerColor,
+                      textStyle: const TextStyle(
+                        fontFamily: 'Shrikhand',
+                        color: Color.fromARGB(227, 228, 246, 255),
+                        fontSize: 60,
+                      ),
+                    ),
+                  );
           },
         ),
       ),
