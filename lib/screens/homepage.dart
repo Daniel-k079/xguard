@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final instantiate myRequestController = Get.find();
   final ScrollController scrollController = ScrollController();
 
   double borderRadius = 45.0;
@@ -43,17 +42,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final myRequestController = Get.put(MyRequest());
     return Obx(() {
       return CustomScrollView(
         physics: const BouncingScrollPhysics(),
         controller: scrollController,
         cacheExtent: 0,
         slivers: [
-          Obx(() {
-            return CustomAppBar(
-                borderRadius: borderRadius,
-                object: myRequestController.object.value);
-          }),
+          CustomAppBar(borderRadius: borderRadius),
           SliverList(
             delegate: SliverChildListDelegate([
               Padding(
@@ -202,7 +198,7 @@ class LecturerViewPage extends StatefulWidget {
 }
 
 class _LecturerViewPageState extends State<LecturerViewPage> {
-  final myRequestController = Get.put(instantiate());
+  final myRequestController = Get.put(MyRequest());
   final ScrollController scrollController = ScrollController();
 
   double borderRadius = 45.0;
@@ -238,11 +234,9 @@ class _LecturerViewPageState extends State<LecturerViewPage> {
           controller: scrollController,
           cacheExtent: 0,
           slivers: [
-            Obx(() {
-              return CustomAppBar2(
-                  borderRadius: borderRadius,
-                  object: myRequestController.objectLec.value);
-            }),
+            CustomAppBar2(
+              borderRadius: borderRadius,
+            ),
             SliverList(
               delegate: SliverChildListDelegate([
                 Padding(
@@ -363,7 +357,7 @@ class _LecturerViewPageState extends State<LecturerViewPage> {
                                               height: 10.0,
                                             ),
                                             Text(
-                                              'You will have an appointment for ${myRequestController.myRequestsLec[index].visitReason} at  ${DateFormat('hh:mm').format(DateTime.parse(myRequestController.myRequestsLec[index].visitDate!))} on ${DateFormat('MMM dd, yyyy').format(DateTime.parse(myRequestController.myRequestsLec[index].visitDate!))}',
+                                              'You will have an appointment for ${myRequestController.myRequestsLec[index].visitReason} with ${myRequestController.myRequestsLec[index].studentName ?? ''} at  ${DateFormat('hh:mm').format(DateTime.parse(myRequestController.myRequestsLec[index].visitDate!))} on ${DateFormat('MMM dd, yyyy').format(DateTime.parse(myRequestController.myRequestsLec[index].visitDate!))}',
                                               style: const TextStyle(
                                                   fontFamily: 'Poppins'),
                                             )
