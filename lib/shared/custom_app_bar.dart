@@ -108,30 +108,31 @@ class CustomAppBar extends StatelessWidget {
                               const SizedBox(
                                 height: 10.0,
                               ),
-                              Row(
-                                children: [
-                                  const Icon(CupertinoIcons.clock,
-                                      color:
-                                          Color.fromARGB(218, 210, 199, 244)),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                myRequestController
-                                                  .data.isNotEmpty
-                                      ?
-                                      Text(
-                                          DateFormat('hh:mm').format(
-                                              DateTime.parse(myRequestController
-                                                  .data['visit_date'] ?? '')),
-                                          style: const TextStyle(
-                                              fontSize: 12.0,
-                                              fontFamily: 'Poppins',
-                                              color: Color.fromARGB(
-                                                  218, 210, 199, 244)),
-                                        )
-                                      : const SizedBox.shrink()
-                                ],
-                              )
+                              Obx(() {
+                                return Row(
+                                  children: [
+                                    const Icon(CupertinoIcons.clock,
+                                        color:
+                                            Color.fromARGB(218, 210, 199, 244)),
+                                    const SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    myRequestController.data.value.isNotEmpty
+                                        ? Text(
+                                            DateFormat('hh:mm').format(DateTime
+                                                .parse(myRequestController
+                                                        .data['visit_date'] ??
+                                                    '')),
+                                            style: const TextStyle(
+                                                fontSize: 12.0,
+                                                fontFamily: 'Poppins',
+                                                color: Color.fromARGB(
+                                                    218, 210, 199, 244)),
+                                          )
+                                        : const SizedBox.shrink()
+                                  ],
+                                );
+                              })
                             ],
                           ),
                         ),
@@ -151,31 +152,33 @@ class CustomAppBar extends StatelessWidget {
                               const SizedBox(
                                 height: 10.0,
                               ),
-                              Row(
-                                children: [
-                                  const Icon(CupertinoIcons.clock,
-                                      color:
-                                          Color.fromARGB(218, 210, 199, 244)),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  myRequestController
-                                                  .data.isNotEmpty ?
-                                       Text(
-                                          DateFormat('hh:mm').format(DateTime
-                                                  .parse(myRequestController
-                                                      .data['visit_date'])
-                                              .add(
-                                                  const Duration(minutes: 10))),
-                                          style: const TextStyle(
-                                              fontSize: 12.0,
-                                              fontFamily: 'Poppins',
-                                              color: Color.fromARGB(
-                                                  218, 210, 199, 244)),
-                                        )
-                                      : const SizedBox.shrink()
-                                ],
-                              )
+                              Obx(() {
+                                return Row(
+                                  children: [
+                                    const Icon(CupertinoIcons.clock,
+                                        color:
+                                            Color.fromARGB(218, 210, 199, 244)),
+                                    const SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    myRequestController.data.value.isNotEmpty
+                                        ? Text(
+                                            DateFormat('hh:mm').format(
+                                                DateTime.parse(
+                                                        myRequestController
+                                                            .data['visit_date'])
+                                                    .add(const Duration(
+                                                        minutes: 10))),
+                                            style: const TextStyle(
+                                                fontSize: 12.0,
+                                                fontFamily: 'Poppins',
+                                                color: Color.fromARGB(
+                                                    218, 210, 199, 244)),
+                                          )
+                                        : const SizedBox.shrink()
+                                  ],
+                                );
+                              })
                             ],
                           ),
                         )
