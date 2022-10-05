@@ -48,7 +48,6 @@ class CustomOverlay {
               child: Text(
                 message,
                 textAlign: TextAlign.center,
-
                 style: TextStyle(
                     color: textColor,
                     fontSize: 20.sp,
@@ -70,35 +69,25 @@ class CustomOverlay {
     );
   }
 
-
   ///specify duration in seconds eg 2
   static showLoaderOverlay({required int duration}) {
-    IgnorePointer loaderOverlay = IgnorePointer(
-      child: SizedBox(
-        child: SizedBox(
-          width: 80.w,
-          height: 80.w,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12.r),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black38,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Center(
-                  child: SizedBox(
-                    width: 30.w,
-                    height: 30.w,
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 4.0,
-                      valueColor: AlwaysStoppedAnimation(
-                        Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+
+    Widget loaderOverlay = SizedBox(
+      width: 80.w,
+      height: 80.w,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black38,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Center(
+          child: SizedBox(
+            width: 30.w,
+            height: 30.w,
+            child: const CircularProgressIndicator(
+              strokeWidth: 4.0,
+              valueColor: AlwaysStoppedAnimation(
+                Colors.white,
               ),
             ),
           ),
