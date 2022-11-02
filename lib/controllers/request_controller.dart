@@ -12,6 +12,8 @@ class RequestController extends GetxController {
   var tempPassword = ''.obs;
   var tempLecturer = ''.obs;
 
+  TextEditingController unCategorizedVisitor = TextEditingController();
+
   @override
   onInit() {
     tempLecturer.value = GetStorage().read('lecturer_name');
@@ -21,6 +23,8 @@ class RequestController extends GetxController {
   ///method to add request
   makeRequest() {
     String userUid = FirebaseAuth.instance.currentUser!.uid;
+    bool isCategorizedVisitor = FirebaseAuth.instance.currentUser!.isAnonymous;
+
     CustomOverlay.showLoaderOverlay(duration: 3);
     try {
       return FirebaseFirestore.instance
@@ -31,8 +35,11 @@ class RequestController extends GetxController {
           .set({
         'visit_reason': visitReason,
         'person_to_meet': personToMeet,
-        'student_name': GetStorage().read('student_name'),
-        'visit_date': visitDate
+        'student_name': isCategorizedVisitor
+            ? unCategorizedVisitor.text
+            : GetStorage().read('student_names'),
+        'visit_date': visitDate,
+        'permitted': 0
       });
     } catch (e) {
       CustomOverlay.showToast(

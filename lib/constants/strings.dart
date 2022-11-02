@@ -16,10 +16,14 @@ List<String> visitReasons = [
 ];
 
 List<Map<String, dynamic>> lecturers = [
+  {'name': 'Super Admin', 'password': 'admin123'},
+  {'name': 'UnCategorized Visitor', 'password': 'guest123'},
   {'name': 'Swaib Dragule', 'password': 'swaib123'},
-  {'name':'Rose Nakibuule',  'password': 'rose890'},
-  {'name':'Micheal Kizito',  'password':'mike456'},
-  {'name':'Engineer Baino',  'password':'baino89'},
-  {'name':'Joyce Nabende',  'password':'joyce236'},
-  {'name':'Group Members', },
+  {'name': 'Rose Nakibuule', 'password': 'rose890'},
+  {'name': 'Micheal Kizito', 'password': 'mike456'},
+  {'name': 'Engineer Baino', 'password': 'baino89'},
+  {'name': 'Joyce Nabende', 'password': 'joyce236'},
+  {
+    'name': 'Group Members',
+  },
 ];

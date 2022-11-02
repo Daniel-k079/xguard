@@ -10,16 +10,22 @@ import 'package:oktoast/oktoast.dart';
 import 'package:xguard/pager.dart';
 import 'package:xguard/screens/homepage.dart';
 import 'package:xguard/screens/login.dart';
+import 'package:xguard/screens/phone_screen.dart';
+import 'package:xguard/screens/reports.dart';
 import 'firebase_options.dart';
+import 'locator.dart';
 
-void main() async {
+Future<void> main() async {
+  setupServices();
   WidgetsFlutterBinding.ensureInitialized();
+
   await GetStorage.init();
   //setting portrait mode only to disable auto rotation on the app
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(Phoenix(child: const OKToast(child: MyApp())));
 }
 
@@ -54,7 +60,15 @@ class MyApp extends StatelessWidget {
                       //if user is anonymous then it is a lecturer and otherwise a student and when a user is empty then we route to the Login page
                       if (snapshot.data != null) {
                         if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                          return const LecturerViewPage();
+                          if (GetStorage().read('lecturer_name') ==
+                              'UnCategorized Visitor') {
+                            return const UnCategorizedVisitor();
+                          } else if (GetStorage().read('lecturer_name') ==
+                              'Super Admin') {
+                            return const Reports();
+                          } else {
+                            return const LecturerViewPage();
+                          }
                         } else {
                           return const Pager();
                         }
@@ -63,6 +77,19 @@ class MyApp extends StatelessWidget {
                       }
                     }),
               )),
+    );
+  }
+}
+
+class UnCategorizedVisitor extends StatelessWidget {
+  const UnCategorizedVisitor({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: PhoneScreen(),
     );
   }
 }

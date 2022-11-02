@@ -41,12 +41,20 @@ class LoginController extends GetxController {
         final credential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
                 email: email.text, password: password.text);
+        if (credential.user != null) {
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(credential.user!.uid)
+              .get()
+              .then((value) {
+            GetStorage().write(
+                'student_names', value['name'] + '-' + value['student_number']);
+          });
+        }
 
         CustomOverlay.showToast(
             'Welcome back!, logging in', Colors.green, Colors.white);
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const Pager()));
+
         return credential;
       } on FirebaseAuthException catch (e) {
         print(e.code);
@@ -97,7 +105,7 @@ class LoginController extends GetxController {
           CustomOverlay.showToast(
               'Creating account and signing in', Colors.green, Colors.white);
           GetStorage()
-              .write('student_name', '${names.text}, ${studentNumber.text}');
+              .write('student_names', '${names.text}, ${studentNumber.text}');
 
           FirebaseFirestore.instance
               .collection('users')
@@ -107,7 +115,8 @@ class LoginController extends GetxController {
             'student_number': studentNumber.text,
             'email_address': email.text
           });
-
+          CustomOverlay.showToast(
+              'Account has been created', Colors.green, Colors.white);
           if (credential.user != null) {}
           return credential;
         } on FirebaseAuthException catch (e) {
@@ -235,7 +244,7 @@ class LoginController extends GetxController {
                   ),
                   ChoicePicker(
                       optionList: lecturers
-                          .sublist(0, 5)
+                          .sublist(0, lecturers.length - 1)
                           .map((element) => DropdownMenuItem<String>(
                                 value: element['password'],
                                 child: Text(
@@ -264,7 +273,7 @@ class LoginController extends GetxController {
                   ),
                   TextFieldBox(
                       isPassword: true,
-                      title: 'Input admin password',
+                      title: 'Input password',
                       hint: 'Write here',
                       textEditingController: passWordController),
                   const SizedBox(

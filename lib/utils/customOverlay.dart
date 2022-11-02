@@ -33,11 +33,11 @@ class CustomOverlay {
       padding: EdgeInsets.only(left: 20.w, right: 20.w),
       child: Material(
         shadowColor: bgColor,
-        borderRadius: BorderRadius.circular(23.r),
+        borderRadius: BorderRadius.circular(3.r),
         color: bgColor,
         elevation: 23.0,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(23.r),
+          borderRadius: BorderRadius.circular(3.r),
           child: Container(
             width: double.infinity,
             height: 72.h,
@@ -61,7 +61,7 @@ class CustomOverlay {
     );
     showToastWidget(
       widget,
-      position: ToastPosition.top,
+      position: ToastPosition.bottom,
       dismissOtherToast: true,
       animationCurve: Curves.linear,
       animationDuration: const Duration(milliseconds: 200),
@@ -77,7 +77,7 @@ class CustomOverlay {
       height: 80.w,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black38,
+          color: Colors.black87,
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Center(
@@ -100,7 +100,7 @@ class CustomOverlay {
       position: ToastPosition.center,
       animationCurve: Curves.easeInOut,
       animationDuration: const Duration(milliseconds: 200),
-      duration: Duration(milliseconds: duration),
+      duration: Duration(seconds: duration),
     );
   }
 }

@@ -36,7 +36,8 @@ class MyRequest extends GetxController {
                   DateTime.parse(element['visit_date'])
                           .difference(DateTime.now())
                           .inMinutes >=
-                      -9;
+                      -9 &&
+                  element['permitted'] == 1;
             })?.data() ??
             {};
 
@@ -59,6 +60,8 @@ class MyRequest extends GetxController {
 
     return stream.map((qShot) => qShot.docs
         .map((doc) => MyRequestModel(
+            docID: doc.id,
+            permitted: doc['permitted'],
             personToMeet: doc['person_to_meet'],
             visitDate: doc['visit_date'],
             visitReason: doc['visit_reason'],
@@ -76,6 +79,9 @@ class MyRequest extends GetxController {
 
     return stream.map((qShot) => qShot.docs
         .map((doc) => MyRequestModel(
+            docID: doc.id,
+            userID: doc.reference.path,
+            permitted: doc['permitted'],
             personToMeet: doc['person_to_meet'],
             visitDate: doc['visit_date'],
             visitReason: doc['visit_reason'],

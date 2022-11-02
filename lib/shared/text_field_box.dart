@@ -38,12 +38,14 @@ class _TextFieldBoxState extends State<TextFieldBox> {
           const SizedBox(
             height: 10.0,
           ),
+
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(13.0),
                 border: Border.all(width: 0.3)),
             child: TextFormField(
+              validator: (value) => validateMandatoryField(value),
               obscureText: widget.isPassword,
               controller: widget.textEditingController,
               decoration: InputDecoration(
@@ -58,7 +60,25 @@ class _TextFieldBoxState extends State<TextFieldBox> {
       ),
     );
   }
+  static String? validateMandatoryField(String? value) {
+
+    final validCharacters = RegExp(r'^[a-zA-Z0-9`/, ]+$');
+
+    if (value!.isEmpty) {
+      return 'This cannot be empty';
+    } else {
+      if (!value.trim().contains(validCharacters) ) {
+        return 'Invalid character';
+      } else {
+        return null;
+      }
+    }
+  }
+
 }
+
+
+
 
 class ChoicePicker extends StatefulWidget {
   ChoicePicker(

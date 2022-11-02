@@ -1,5 +1,5 @@
-
 import 'package:bouncing_widget/bouncing_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:xguard/animations/animations.dart';
 import 'package:xguard/controllers/controller.dart';
@@ -14,22 +14,27 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List navIconList = FirebaseAuth.instance.currentUser!.isAnonymous
+        ? navController.navBarItems.sublist(4, 6)
+        : navController.navBarItems.sublist(0, 4);
+
+    
     return Align(
       alignment: Alignment.bottomCenter,
       child: DelayedFade(
         delay: 650,
         child: Container(
-            height: 90.0,
+            height: 80.0,
             decoration: const BoxDecoration(
                 color: Colors.blueGrey,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(40))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: navController.navBarItems
+              children: navIconList
                   .map((item) => BouncingWidget(
                         onPressed: () {
                           navController.pageSwitcher(
-                            navController.navBarItems.indexOf(item),
+                            navIconList.indexOf(item),
                           );
                         },
                         child: Container(

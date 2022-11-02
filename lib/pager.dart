@@ -1,6 +1,9 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:xguard/controllers/controller.dart';
+import 'package:xguard/pages/face_scan.dart';
+import 'package:xguard/screens/scanner.dart';
 import 'package:xguard/shared/shared.dart';
 import 'screens/screens.dart';
 
@@ -30,6 +33,7 @@ class _PagerState extends State<Pager> {
           controller: navController.pageController,
           children: const <Widget>[
             HomePage(),
+            FaceScan(),
             Request(),
             Profile(),
           ],

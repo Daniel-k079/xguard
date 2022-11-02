@@ -211,7 +211,7 @@ class CustomAppBar2 extends StatelessWidget {
       elevation: 20,
       shadowColor: Colors.black,
       collapsedHeight: 90,
-      expandedHeight: 100 + MediaQuery.of(context).padding.top,
+      expandedHeight: 200 + MediaQuery.of(context).padding.top,
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: const LinearGradient(

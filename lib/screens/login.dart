@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:xguard/controllers/login_controller.dart';
 
-import '../utils/customOverlay.dart';
 
 enum LoginStates { blank, register, login }
 
@@ -29,14 +28,20 @@ class _LoginPageState extends State<LoginPage> {
         width: double.infinity,
         decoration: const BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topLeft, colors: [
-          Color.fromARGB(255, 33, 163, 243),
+          Color.fromARGB(255, 50, 154, 219),
           Color.fromARGB(255, 23, 148, 165),
-          Color.fromARGB(255, 134, 91, 227)
+          Color.fromARGB(255, 124, 76, 227)
         ])),
         child: currentState == LoginStates.blank.index
             ? Column(
                 children: [
-                  const Spacer(),
+                          const SizedBox(
+                    height: 100.0,
+                  ),
+                  Image.asset('assets/images/mak_logo.png', width: 140.0,),
+                          const SizedBox(
+                    height: 20.0,
+                  ),
                   const Text(
                     'GuardX',
                     style: TextStyle(
@@ -48,18 +53,12 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 20.0,
                   ),
-                  const Text(
-                    'Come on board.',
-                    style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white),
-                  ),
+           
                   const SizedBox(
                     height: 20.0,
                   ),
                   const Text(
-                    'Create a free account and conveniently manage your gate pass access.',
+                    'Create a free account and conveniently manage your gate pass access to COCIS.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: 'Poppins',
@@ -134,9 +133,11 @@ class _LoginPageState extends State<LoginPage> {
                         loginController.showLecturerSheet(context);
                       },
                       child: const Text(
-                        'Log in as a lecturer',
+                        'Continue as other User',
                         style: TextStyle(
-                            fontFamily: 'Poppins',
+                              fontFamily: 'Poppins',
+                                  fontSize: 20.0,
+
                             color: Colors.white,
                             decoration: TextDecoration.underline),
                       )),

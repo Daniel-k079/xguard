@@ -8,12 +8,17 @@ class NavigationController extends GetxController {
 
   List navBarItems = [
     {'label': 'Home', 'icon': IcoFontIcons.uiHome},
+    {'label': 'Scan', 'icon': IcoFontIcons.uiCamera},
     {'label': 'Request', 'icon': IcoFontIcons.uiAdd},
-    {'label': 'Profile', 'icon': IcoFontIcons.uiUser}
+    {'label': 'Profile', 'icon': IcoFontIcons.uiUser},
+    {'label': 'Home', 'icon': IcoFontIcons.uiHome},
+    
+    {'label': 'Reports', 'icon': IcoFontIcons.fileAlt},
   ];
 
   void pageSwitcher(int index) {
     currentIndex.value = index;
+    print(index);
 
     switch (index) {
       case 0:
@@ -26,6 +31,18 @@ class NavigationController extends GetxController {
         break;
       case 2:
         pageController.animateToPage(2,
+            duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
+        break;
+      case 3:
+        pageController.animateToPage(3,
+            duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
+        break;
+      case 4:
+        pageController.animateToPage(4,
+            duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
+        break;
+      case 5:
+        pageController.animateToPage(5,
             duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
         break;
       default:
